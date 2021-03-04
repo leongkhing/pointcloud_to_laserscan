@@ -107,6 +107,25 @@ namespace pointcloud_to_laserscan
     pub_ = nh_.advertise<sensor_msgs::LaserScan>("scan", 10,
                                                  boost::bind(&PointCloudToLaserScanNodelet::connectCb, this),
                                                  boost::bind(&PointCloudToLaserScanNodelet::disconnectCb, this));
+
+    dynamic_reconfigure::Server<pointcloud_to_laserscan::PointcloudToLaserScanConfig>* server = new dynamic_reconfigure::Server<pointcloud_to_laserscan::PointcloudToLaserScanConfig>(private_nh_);;
+    dynamic_reconfigure::Server<pointcloud_to_laserscan::PointcloudToLaserScanConfig>::CallbackType f;
+    f = boost::bind(&PointCloudToLaserScanNodelet::dynamicReconfigureCallback, this, _1, _2);
+    server->setCallback(f);
+  }
+
+  void PointCloudToLaserScanNodelet::dynamicReconfigureCallback(pointcloud_to_laserscan::PointcloudToLaserScanConfig &config, uint32_t level) 
+  {
+    target_frame_ = config.target_frame;
+    tolerance_ = config.transform_tolerance;
+    min_height_ = config.min_height;
+    max_height_ = config.max_height;
+    angle_min_  = config.angle_min;
+    angle_max_ = config.angle_max;
+    angle_increment_ = config.angle_increment;
+    range_min_ = config.range_min;
+    range_max_ = config.range_max;
+    use_inf_ = config.use_inf;
   }
 
   void PointCloudToLaserScanNodelet::connectCb()
@@ -238,4 +257,6 @@ namespace pointcloud_to_laserscan
 
 }
 
-PLUGINLIB_DECLARE_CLASS(pointcloud_to_laserscan, PointCloudToLaserScanNodelet, pointcloud_to_laserscan::PointCloudToLaserScanNodelet, nodelet::Nodelet);
+//PLUGINLIB_DECLARE_CLASS(pointcloud_to_laserscan, PointCloudToLaserScanNodelet, pointcloud_to_laserscan::PointCloudToLaserScanNodelet, nodelet::Nodelet);
+PLUGINLIB_EXPORT_CLASS(pointcloud_to_laserscan::PointCloudToLaserScanNodelet, nodelet::Nodelet)
+

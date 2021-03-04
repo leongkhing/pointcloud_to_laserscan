@@ -5,10 +5,16 @@ find_package(catkin REQUIRED COMPONENTS
   message_filters
   nodelet
   roscpp
+  rospy
   sensor_msgs
   tf2
   tf2_ros
   tf2_sensor_msgs
+  dynamic_reconfigure
+)
+
+generate_dynamic_reconfigure_options(
+  cfg/pointcloud_to_laserscan.cfg
 )
 
 catkin_package(
@@ -27,6 +33,7 @@ target_link_libraries(pointcloud_to_laserscan ${catkin_LIBRARIES})
 
 add_executable(pointcloud_to_laserscan_node src/pointcloud_to_laserscan_node.cpp)
 target_link_libraries(pointcloud_to_laserscan_node pointcloud_to_laserscan ${catkin_LIBRARIES})
+add_dependencies(pointcloud_to_laserscan_node ${PROJECT_NAME}_gencfg)
 
 install(TARGETS pointcloud_to_laserscan pointcloud_to_laserscan_node
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

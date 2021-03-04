@@ -51,6 +51,9 @@
 #include "message_filters/subscriber.h"
 #include "sensor_msgs/PointCloud2.h"
 
+#include <dynamic_reconfigure/server.h>
+#include <pointcloud_to_laserscan/PointcloudToLaserScanConfig.h>
+
 
 namespace pointcloud_to_laserscan
 {
@@ -67,7 +70,9 @@ namespace pointcloud_to_laserscan
 
   private:
     virtual void onInit();
-
+    void dynamicReconfigureCallback(
+      pointcloud_to_laserscan::PointcloudToLaserScanConfig &config, 
+      uint32_t level); 
     void cloudCb(const sensor_msgs::PointCloud2ConstPtr &cloud_msg);
     void failureCb(const sensor_msgs::PointCloud2ConstPtr &cloud_msg,
         tf2_ros::filter_failure_reasons::FilterFailureReason reason);
